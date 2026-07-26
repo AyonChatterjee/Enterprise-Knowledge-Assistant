@@ -4,8 +4,8 @@ import shutil
 from fastapi import UploadFile
 
 from app.core.config import settings
-from app.rag.loader import pdf_loader
-from app.rag.splitter import document_splitter
+from app.rag.ingestion.loader import pdf_loader
+from app.rag.ingestion.splitter import document_splitter
 from app.schemas.upload import UploadResponse, ChunkPreview
 
 class UploadService:
