@@ -6,6 +6,7 @@ from fastapi import UploadFile
 from app.core.config import settings
 from app.rag.loader import pdf_loader
 from app.rag.splitter import document_splitter
+from app.schemas.upload import UploadResponse, ChunkPreview
 
 class UploadService:
     """
@@ -16,7 +17,7 @@ class UploadService:
         self.upload_directory = Path(settings.DATA_DIRECTORY)
         self.upload_directory.mkdir(parents=True, exist_ok=True)
 
-    async def save_pdf(self, file: UploadFile) -> dict:
+    async def save_pdf(self, file: UploadFile) -> UploadResponse:
         """
         Save the uploaded PDF to disk.
         """
@@ -29,20 +30,18 @@ class UploadService:
         pages = pdf_loader.load(str(file_path))
         chunks = document_splitter.split_documents(pages)
 
-        return {
-            "filename": file.filename,
-            "pages": len(pages),
-            "chunks": len(chunks),
-            "path": str(file_path),
-            "status": "uploaded" , 
-            "preview": [
-          {
-            "page_content": chunk.page_content[:250],
-            "metadata": chunk.metadata,
-         }
-          for chunk in chunks[:3]
-     ],    
- }
+        return UploadResponse(
+          filename=file.filename,
+          pages=len(pages),
+          chunks=len(chunks),
+          preview=[
+              ChunkPreview(
+              page_content=chunk.page_content[:250],
+              metadata=chunk.metadata,
+        )
+        for chunk in chunks[:3]
+    ],
+)
 
 
 upload_service = UploadService()
