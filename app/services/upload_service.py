@@ -4,6 +4,7 @@ import shutil
 from fastapi import UploadFile
 
 from app.core.config import settings
+from app.rag.loader import pdf_loader
 
 
 class UploadService:
@@ -25,10 +26,14 @@ class UploadService:
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
+        pages = pdf_loader.load(str(file_path))
+
         return {
             "filename": file.filename,
+            "pages": len(pages),
             "path": str(file_path),
-            "status": "uploaded"
+            "status": "uploaded" , 
+            "preview": pages[:2]  # Return the first two pages as a preview
         }
 
 
