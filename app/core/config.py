@@ -5,10 +5,16 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     """
-    Central configuration for the application.
+    Application configuration.
 
-    Every configurable value should come from the environment.
+    Every configurable value should come from environment variables.
     """
+
+    APP_NAME: str = "Enterprise Knowledge Assistant"
+
+    APP_VERSION: str = "1.0.0"
+
+    API_PREFIX: str = "/api/v1"
 
     OPENAI_API_KEY: str
 
@@ -16,9 +22,9 @@ class Settings(BaseSettings):
 
     EMBEDDING_MODEL: str = "text-embedding-3-small"
 
-    CHROMA_DB_PATH: str = "./chroma_db"
-
     DATA_DIRECTORY: str = "./data/uploaded_pdfs"
+
+    CHROMA_DB_PATH: str = "./chroma_db"
 
     CHUNK_SIZE: int = 1000
 
@@ -37,12 +43,7 @@ class Settings(BaseSettings):
 
 
 @lru_cache
-def get_settings() -> Settings:
-    """
-    Return a cached Settings instance.
-
-    Using lru_cache ensures we load configuration only once.
-    """
+def get_settings():
     return Settings()
 
 
