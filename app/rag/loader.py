@@ -1,40 +1,43 @@
 from pathlib import Path
 
-import fitz  # PyMuPDF
+import fitz
+from langchain_core.documents import Document
 
 
 class PDFLoader:
     """
-    Responsible for extracting text and metadata from PDF documents.
+    Loads PDF files and converts every page into
+    LangChain Document objects.
     """
 
-    def load(self, pdf_path: str) -> list[dict]:
-        """
-        Extract text from every page of a PDF.
+    def load(self, pdf_path: str) -> list[Document]:
 
-        Returns:
-            List of page dictionaries.
-        """
+        pdf = fitz.open(pdf_path)
 
-        document = fitz.open(pdf_path)
+        documents = []
 
-        pages = []
+        source = Path(pdf_path).name
 
-        for page_number, page in enumerate(document, start=1):
+        for page_number, page in enumerate(pdf, start=1):
 
-            text = page.get_text("text")
+            text = page.get_text()
 
-            pages.append(
-                {
+            if not text.strip():
+                continue
+
+            document = Document(
+                page_content=text,
+                metadata={
                     "page": page_number,
-                    "text": text,
-                    "source": Path(pdf_path).name,
-                }
+                    "source": source,
+                },
             )
 
-        document.close()
+            documents.append(document)
 
-        return pages
+        pdf.close()
+
+        return documents
 
 
 pdf_loader = PDFLoader()

@@ -5,7 +5,7 @@ from fastapi import UploadFile
 
 from app.core.config import settings
 from app.rag.loader import pdf_loader
-
+from app.rag.splitter import document_splitter
 
 class UploadService:
     """
@@ -27,14 +27,22 @@ class UploadService:
             shutil.copyfileobj(file.file, buffer)
 
         pages = pdf_loader.load(str(file_path))
+        chunks = document_splitter.split_documents(pages)
 
         return {
             "filename": file.filename,
             "pages": len(pages),
+            "chunks": len(chunks),
             "path": str(file_path),
             "status": "uploaded" , 
-            "preview": pages[:2]  # Return the first two pages as a preview
-        }
+            "preview": [
+          {
+            "page_content": chunk.page_content[:250],
+            "metadata": chunk.metadata,
+         }
+          for chunk in chunks[:3]
+     ],    
+ }
 
 
 upload_service = UploadService()
