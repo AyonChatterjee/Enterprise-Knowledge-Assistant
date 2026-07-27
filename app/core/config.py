@@ -30,7 +30,13 @@ class Settings(BaseSettings):
 
     CHUNK_OVERLAP: int = 200
 
-    TOP_K: int = 10
+    TOP_K: int = 6
+
+    FETCH_K: int = 30
+
+    MMR_LAMBDA: float = 0.7
+
+    SEARCH_TYPE: str = "mmr"
 
     RERANK_TOP_K: int = 5
 
