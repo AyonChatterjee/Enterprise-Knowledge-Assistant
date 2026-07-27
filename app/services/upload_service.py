@@ -27,12 +27,14 @@ class UploadService:
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        pages = pdf_loader.load(str(file_path))
-        chunks = document_splitter.split_documents(pages)
+        documents = pdf_loader.load(str(file_path))
+        chunks = document_splitter.split_documents(documents)
 
         return UploadResponse(
           filename=file.filename,
-          pages=len(pages),
+          path=str(file_path),
+          status="uploaded",
+          pages=len(documents),
           chunks=len(chunks),
           preview=[
               ChunkPreview(

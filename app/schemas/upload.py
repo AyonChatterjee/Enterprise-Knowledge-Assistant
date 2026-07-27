@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import BaseModel
 
 class ChunkPreview(BaseModel):
@@ -7,7 +9,7 @@ class ChunkPreview(BaseModel):
 
     page_content: str
 
-    metadata: dict[str ,  any]
+    metadata: dict[str ,  Any]
 
 
 class UploadResponse(BaseModel):
