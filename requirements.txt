@@ -27,6 +27,8 @@ langgraph
 langchain-openai
 langchain-text-splitters
 langchain-chroma
+sentence-transformers
+langchain-huggingface
 
 # ==========================
 # Vector Database

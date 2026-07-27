@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 
     MODEL_NAME: str = "gpt-4.1-mini"
 
-    EMBEDDING_MODEL: str = "text-embedding-3-small"
+    EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
 
     DATA_DIRECTORY: str = "./data/uploaded_pdfs"
 

@@ -7,6 +7,7 @@ from app.core.config import settings
 from app.rag.ingestion.loader import pdf_loader
 from app.rag.ingestion.splitter import document_splitter
 from app.schemas.upload import UploadResponse, ChunkPreview
+from app.rag.vectorstore.chroma import vector_store
 
 class UploadService:
     """
@@ -29,6 +30,7 @@ class UploadService:
 
         documents = pdf_loader.load(str(file_path))
         chunks = document_splitter.split_documents(documents)
+        vector_store.add_documents(chunks)
 
         return UploadResponse(
           filename=file.filename,
